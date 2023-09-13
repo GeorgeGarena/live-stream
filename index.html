@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  </head>
+  <body>
+    <div id="app">
+      <video controls id="video"></video>
+      <input type="text" />
+      <button type="button" id="load">Load</button>
+    </div>
+    <script>
+      const video = document.querySelector("#video");
+      const button = document.querySelector("#load");
+
+      if (Hls && Hls.isSupported()) {
+        const hls = new Hls();
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          video.play();
+        });
+
+        button.addEventListener("click", () => {
+          hls.loadSource(document.querySelector("input").value);
+        });
+      } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+        video.addEventListener("canplay", function () {
+          video.play();
+        });
+        button.addEventListener("click", function () {
+          video.src = document.querySelector("input").value;
+        });
+      }
+    </script>
+  </body>
+</html>
